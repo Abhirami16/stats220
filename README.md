@@ -24,5 +24,5 @@ This is my repo for STATS 220.
 [Surf Society](https://sites.google.com/view/uniofaucklandsurfsociety/home)
 
 
-## Meme for the Vibes
+_## Meme for the Vibes_
 ![](https://c.tenor.com/DbLBWlFEqxUAAAAd/tenor.gif)
