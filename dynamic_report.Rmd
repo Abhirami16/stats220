@@ -1,0 +1,120 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+library(tidyverse)
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRbLYZJoiv565PM9rhvaxDFl-ovC_JI05_OjoVHzDAsbxXdjjuWC6qfRdPp-i3pFacl5Ry1Qap2Odsr/pub?output=csv") 
+
+
+# Renaming Variable
+latest_data <- logged_data %>%
+  rename(
+    date = `Date of Daily Alert`,
+    tone = `What is the Overall Tone of the Alert Title?`,
+    sp500_change = `What Is the Percentage Change in Value of the S&P 500 Since the Day Before? Do Not Include the % Sign in Your Response`,
+    trump_mentions = `How Many Times Was ‘Trump’ Mentioned in the Alert?`
+  )
+```
+
+```{css}
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;400;700&display=swap');
+
+.title {
+  font-weight: bold;
+}
+.subtitle {
+  font-weight: bold;
+  font-style: italic;
+}
+
+body {  
+  background-color: #e2e0d7;
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h2 {  
+  font-weight: bold; 
+  color: #E69F00; 
+}
+```
+
+## Analysing Headline Tones, Number of Trump Mentions and Movements in the S&P 500 in ASB's Daily Alert Articles 
+
+#### This report examines the tone of headlines, number of Trump mentions, and movements in the S&P 500 Index in ASB's Daily Alert Articles. It aims It aims to visualise this data clearly and compellingly, whilst providing commentary and highlighting key observations.
+
+
+```{r}
+# Summary Values
+min_sp500 <- min(latest_data$sp500_change)
+max_sp500 <- max(latest_data$sp500_change)
+mean_sp500 <- mean(latest_data$sp500_change)
+min_trumpmentions <- min(latest_data$trump_mentions)
+max_trumpmentions <- max(latest_data$trump_mentions)
+mean_trumpmentions <- mean(latest_data$trump_mentions)
+num_alerts <- (latest_data$trump_mentions) %>% 
+  length () 
+```
+
+Trump is mentioned a varying number of times across the alerts, ranging from a minimum of `r min_trumpmentions` to a maximum of `r max_trumpmentions` mentions. 
+
+Of interest in this graph is the frequency of alerts with exactly three Trump mentions, as well as the sharp jump to two alerts where Trump is mentioned a striking seven times.
+
+```{r}
+# Frequency of Number of Trump Mentions in Each ASB Daily Alert
+latest_data %>%
+ggplot() +
+  geom_bar(aes(x = trump_mentions), fill = "#f11831") +
+  labs(title = "Frequency of Number of Trump Mentions in Each ASB Daily Alert",
+       x = "Number of Times 'Trump' is Mentioned in Daily Alert",
+       y = "Frequency")
+```
+
+
+The average percentage change in the S&P 500 across all `r num_alerts` alerts surveyed is `r mean_sp500`%. The largest single-day movement surveyed `r max_sp500`% whilst the biggest drop was `r min_sp500`%.
+
+
+Whilst no clear trend arises from this graph I do find it amusing to observe that the highest average percentage increase in the S&P 500 Index, by a fairly sizable margin, occurred on days when Trump wasn’t mentioned at all in the Daily Alert.
+
+```{r}
+# Average Percentage Change in the S&P 500 by Number of 'Trump Mentions' Graph
+latest_data %>%
+  group_by(trump_mentions) %>%
+  summarise(avg_sp500 = mean(sp500_change)) %>%
+  ggplot(aes(x = trump_mentions, y = avg_sp500)) +
+  geom_col(fill = "#E69F00") +
+  labs(title = "Average Percentage Change in the S&P 500 by Number of 'Trump Mentions'",
+       x = "Number of 'Trump Mentions'", 
+       y = "Average Percentag Change in S&P 500 (%)")
+```
+
+
+Across all `r num_alerts` daily alerts surveyed the average number of times Trump is mentioned is `r mean_trumpmentions` times. This graph demonstrates how the average mention number can vary depending on the tone of the alert headline.
+
+It was interesting to see that the data collected suggests a negative correlation between the number of trump mentions and the positivity of the daily alert headline. Alerts with negative headlines had the highest average Trump mentions, whilst those with positive tones had the fewest.
+
+```{r}
+# Average Number of 'Trump Mentions' by Tone of Daily Alert Headline Graph
+latest_data %>%
+  group_by(tone) %>%
+  summarise(avg_trump = mean(trump_mentions)) %>%
+  ggplot(aes(x = tone, y = avg_trump, fill = tone)) +
+  geom_col() +
+  scale_fill_manual(values=c("darkred", "#E69F00", "darkgreen")) +
+  labs(title = "Average Number of 'Trump Mentions' by Tone of Daily Alert Headline",
+       x = "Tone of Daily Alert Headline", 
+       y = "Average Number of 'Trump Mentions'")
+```
+
+
+```{r}
+
+```
+
+
