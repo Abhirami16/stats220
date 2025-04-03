@@ -47,7 +47,7 @@ h2 {
 
 ## Analysing Headline Tones, Number of Trump Mentions and Movements in the S&P 500 in ASB's Daily Alert Articles 
 
-#### This report examines the tone of headlines, number of Trump mentions, and movements in the S&P 500 Index in ASB's Daily Alert Articles. It aims It aims to visualise this data clearly and compellingly, whilst providing commentary and highlighting key observations.
+#### This report examines the tone of headlines, number of Trump mentions, and movements in the S&P 500 Index in ASB's Daily Alert Articles. It aims to visualise this data clearly and compellingly, whilst providing commentary and highlighting key observations.
 
 
 ```{r}
